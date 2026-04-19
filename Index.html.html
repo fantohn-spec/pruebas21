@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Booth XV · PC Webcam</title>
+  <!-- Tailwind + Fuentes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 40%, #4a1942 80%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 16px;
+    }
+    .polaroid-frame {
+      background: #fff;
+      padding: 16px 16px 60px 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
+      position: relative;
+      border-radius: 8px;
+    }
+    .polaroid-frame::before {
+      content: '';
+      position: absolute;
+      top: 4px; left: 4px; right: 4px; bottom: 4px;
+      border: 2px solid rgba(212,175,55,0.25);
+      pointer-events: none;
+      border-radius: 6px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #d4af37, #f0d060);
+      color: #1a0a2e;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 16px rgba(212,175,55,0.3);
+    }
+    .btn-secondary {
+      background: rgba(212,175,55,0.15);
+      border: 1px solid #d4af37;
+      color: #f0d060;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      background: rgba(212,175,55,0.25);
+    }
+    /* Estilo para pantalla verde */
+    .green-screen {
+      background: #00b140;
+      background-image: radial-gradient(circle at 30% 30%, #00d84a, #008a30);
+    }
+  </style>
+</head>
+<body>
+
+<div class="w-full max-w-3xl mx-auto">
+  <!-- TARJETA PRINCIPAL -->
+  <div class="bg-[#1e1030] bg-opacity-40 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-2xl border border-[#d4af37]/20">
+    
+    <!-- Encabezado -->
+    <div class="text-center mb-6">
+      <div class="flex justify-center mb-2">
+        <!-- Tiara decorativa -->
+        <svg width="64" height="36" viewBox="0 0 60 32">
+          <path d="M5 28 L15 8 L22 18 L30 2 L38 18 L45 8 L55 28" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="30" cy="4" r="3" fill="#d4af37"/>
+          <circle cx="15" cy="10" r="2" fill="#e8c44a"/>
+          <circle cx="45" cy="10" r="2" fill="#e8c44a"/>
+          <circle cx="22" cy="18" r="1.5" fill="#f0d060"/>
+          <circle cx="38" cy="18" r="1.5" fill="#f0d060"/>
+          <path d="M3 28 L57 28" stroke="#d4af37" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1 class="text-3xl md:text-4xl font-bold" style="font-family: 'Playfair Display', serif; color: #f0d060;">Mis XV Años</h1>
+      <p class="text-lg italic" style="color: #e8c44a; font-family: 'Playfair Display', serif;">Valentina</p>
+      <p class="text-sm mt-1 opacity-80" style="color: #e8c44a;">Photo Booth · PC Edition</p>
+    </div>
+
+    <!-- ÁREA DE VISUALIZACIÓN (VIDEO / CANVAS / FALLBACK VERDE) -->
+    <div class="flex justify-center">
+      <div class="polaroid-frame w-full max-w-md">
+        <!-- Contenedor con relación de aspecto 3:4 -->
+        <div class="relative w-full aspect-[3/4] bg-black rounded-md overflow-hidden" id="previewContainer">
+          <!-- Video (oculto inicialmente hasta que se active la cámara) -->
+          <video id="cameraVideo" autoplay playsinline muted 
+                 class="absolute inset-0 w-full h-full object-cover hidden"></video>
+          <!-- Canvas de vista previa (para mostrar video o fallback verde) -->
+          <canvas id="liveCanvas" class="absolute inset-0 w-full h-full object-cover"></canvas>
+          <!-- Mensaje de estado -->
+          <div id="statusMessage" class="absolute bottom-2 left-0 right-0 text-center text-white text-xs bg-black/40 py-1">
+            Iniciando cámara...
+          </div>
+        </div>
+        <!-- Texto inferior del marco -->
+        <div class="text-center mt-2">
+          <p class="text-sm font-medium" style="color: #b8860b; font-family: 'Playfair Display', serif;">15 de Junio, 2025</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTONES DE CONTROL -->
+    <div class="flex flex-wrap items-center justify-center gap-3 mt-8">
+      <!-- Botón Capturar -->
+      <button id="btnCapture" class="btn-primary px-8 py-3 rounded-full text-base shadow-lg flex items-center gap-2">
+        <i data-lucide="camera" class="w-5 h-5"></i> Capturar
+      </button>
+      
+      <!-- Botón Cambiar cámara (solo visible si hay múltiples) -->
+      <button id="btnSwitchCam" class="btn-secondary p-3 rounded-full" title="Cambiar cámara">
+        <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- BOTONES DE ACCIÓN (Guardar / Imprimir) - aparecen tras captura -->
+    <div id="actionButtons" class="hidden flex-wrap items-center justify-center gap-3 mt-6">
+      <button id="btnSave" class="btn-primary px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
+        <i data-lucide="download" class="w-4 h-4"></i> Guardar Foto
+      </button>
+      <button id="btnPrint" class="btn-secondary px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
+        <i data-lucide="printer" class="w-4 h-4"></i> Imprimir
+      </button>
+      <button id="btnNewPhoto" class="btn-secondary px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
+        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Nueva Foto
+      </button>
+    </div>
+
+    <!-- Mensaje de pie -->
+    <p class="text-center text-xs mt-6 opacity-70" style="color: #e8c44a;">¡Gracias por compartir este día!</p>
+  </div>
+</div>
+
+<!-- Canvas oculto para procesar la foto final con marco -->
+<canvas id="finalCanvas" style="display:none;"></canvas>
+
+<script>
+  (function(){
+    "use strict";
+
+    // ----- ELEMENTOS DEL DOM -----
+    const video = document.getElementById('cameraVideo');
+    const liveCanvas = document.getElementById('liveCanvas');
+    const liveCtx = liveCanvas.getContext('2d');
+    const statusMsg = document.getElementById('statusMessage');
+    const btnCapture = document.getElementById('btnCapture');
+    const btnSwitch = document.getElementById('btnSwitchCam');
+    const actionDiv = document.getElementById('actionButtons');
+    const btnSave = document.getElementById('btnSave');
+    const btnPrint = document.getElementById('btnPrint');
+    const btnNew = document.getElementById('btnNewPhoto');
+    const finalCanvas = document.getElementById('finalCanvas');
+    const finalCtx = finalCanvas.getContext('2d');
+
+    // ----- ESTADO -----
+    let stream = null;
+    let cameraActive = false;
+    let facingMode = 'user';
+    let photoTaken = false;
+    let currentPhotoDataURL = '';
+
+    const OUTPUT_WIDTH = 720;
+    const OUTPUT_HEIGHT = 960;
+
+    // ----- FUNCIONES DE DIBUJO -----
+    function drawGreenScreen(ctx, width, height) {
+      const grad = ctx.createLinearGradient(0, 0, width, height);
+      grad.addColorStop(0, '#00b140');
+      grad.addColorStop(1, '#006b28');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, width, height);
+      
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 2;
+      const step = 40;
+      for (let i = 0; i < width; i += step) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, height);
+        ctx.stroke();
+      }
+      for (let i = 0; i < height; i += step) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(width, i);
+        ctx.stroke();
+      }
+      
+      ctx.font = 'bold 24px "Quicksand", sans-serif';
+      ctx.fillStyle = 'white';
+      ctx.shadowColor = 'black';
+      ctx.shadowBlur = 10;
+      ctx.textAlign = 'center';
+      ctx.fillText('📷 SIN CÁMARA', width/2, height/2 - 20);
+      ctx.font = '16px "Quicksand", sans-serif';
+      ctx.fillText('Pantalla verde · Photo Booth', width/2, height/2 + 20);
+      ctx.shadowBlur = 0;
+    }
+
+    function drawVideoToLiveCanvas() {
+      if (!cameraActive || !stream || video.readyState < 2) {
+        drawGreenScreen(liveCtx, liveCanvas.width, liveCanvas.height);
+        return;
+      }
+      
+      const vw = video.videoWidth;
+      const vh = video.videoHeight;
+      if (vw === 0 || vh === 0) return;
+      
+      let sx, sy, sw, sh;
+      const targetAspect = 3/4;
+      const videoAspect = vw / vh;
+      
+      if (videoAspect > targetAspect) {
+        sw = vh * targetAspect;
+        sh = vh;
+        sx = (vw - sw) / 2;
+        sy = 0;
+      } else {
+        sw = vw;
+        sh = vw / targetAspect;
+        sx = 0;
+        sy = (vh - sh) / 2;
+      }
+      
+      liveCtx.drawImage(video, sx, sy, sw, sh, 0, 0, liveCanvas.width, liveCanvas.height);
+    }
+
+    function animate() {
+      if (cameraActive) {
+        drawVideoToLiveCanvas();
+      } else {
+        drawGreenScreen(liveCtx, liveCanvas.width, liveCanvas.height);
+      }
+      requestAnimationFrame(animate);
+    }
+
+    // ----- INICIALIZAR CÁMARA (CORREGIDO) -----
+    async function initCamera() {
+      try {
+        // Detener stream previo
+        if (stream) {
+          stream.getTracks().forEach(t => t.stop());
+          stream = null;
+        }
+        
+        statusMsg.textContent = 'Solicitando acceso a la cámara...';
+        console.log('🔵 Solicitando cámara con facingMode:', facingMode);
+        
+        const constraints = {
+          video: {
+            facingMode: facingMode,
+            width: { ideal: 1280 },
+            height: { ideal: 960 }
+          },
+          audio: false
+        };
+        
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+        console.log('✅ Stream obtenido:', stream);
+        
+        // Asignar stream al video
+        video.srcObject = stream;
+        video.classList.remove('hidden'); // Asegurar visibilidad
+        
+        // Forzar reproducción
+        await video.play().catch(e => console.warn('⚠️ video.play() rechazado:', e));
+        
+        // Esperar a que el video tenga datos
+        await new Promise((resolve) => {
+          if (video.readyState >= 2) {
+            resolve();
+          } else {
+            video.onloadeddata = () => {
+              console.log('📹 Video cargado, dimensiones:', video.videoWidth, 'x', video.videoHeight);
+              resolve();
+            };
+          }
+        });
+        
+        // Activar bandera de cámara
+        cameraActive = true;
+        statusMsg.textContent = 'Cámara activa';
+        btnSwitch.style.display = 'inline-flex';
+        console.log('🎥 Cámara activa. cameraActive =', cameraActive);
+        
+        // Ajustar canvas
+        const container = liveCanvas.parentElement;
+        const rect = container.getBoundingClientRect();
+        liveCanvas.width = rect.width || 360;
+        liveCanvas.height = liveCanvas.width * (4/3);
+        
+      } catch (error) {
+        console.error('❌ Error al acceder a la cámara:', error);
+        cameraActive = false;
+        video.classList.add('hidden');
+        statusMsg.textContent = 'Sin cámara · Modo demostración (pantalla verde)';
+        btnSwitch.style.display = 'none';
+        
+        const container = liveCanvas.parentElement;
+        const rect = container.getBoundingClientRect();
+        liveCanvas.width = rect.width || 360;
+        liveCanvas.height = liveCanvas.width * (4/3);
+        drawGreenScreen(liveCtx, liveCanvas.width, liveCanvas.height);
+      }
+    }
+
+    // ----- CAMBIAR CÁMARA -----
+    async function switchCamera() {
+      if (!cameraActive) return;
+      facingMode = (facingMode === 'user') ? 'environment' : 'user';
+      await initCamera();
+    }
+
+    // ----- CAPTURAR FOTO -----
+    function capturePhoto() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = OUTPUT_WIDTH;
+      tempCanvas.height = OUTPUT_HEIGHT;
+      const tempCtx = tempCanvas.getContext('2d');
+      
+      if (cameraActive && video.readyState >= 2) {
+        const vw = video.videoWidth;
+        const vh = video.videoHeight;
+        let sx, sy, sw, sh;
+        const targetAspect = 3/4;
+        const videoAspect = vw / vh;
+        
+        if (videoAspect > targetAspect) {
+          sw = vh * targetAspect;
+          sh = vh;
+          sx = (vw - sw) / 2;
+          sy = 0;
+        } else {
+          sw = vw;
+          sh = vw / targetAspect;
+          sx = 0;
+          sy = (vh - sh) / 2;
+        }
+        
+        if (facingMode === 'user') {
+          tempCtx.save();
+          tempCtx.translate(OUTPUT_WIDTH, 0);
+          tempCtx.scale(-1, 1);
+        }
+        tempCtx.drawImage(video, sx, sy, sw, sh, 0, 0, OUTPUT_WIDTH, OUTPUT_HEIGHT);
+        if (facingMode === 'user') tempCtx.restore();
+      } else {
+        drawGreenScreen(tempCtx, OUTPUT_WIDTH, OUTPUT_HEIGHT);
+      }
+      
+      // Marco final
+      const PAD = 24;
+      const BOTTOM = 100;
+      finalCanvas.width = OUTPUT_WIDTH + PAD * 2;
+      finalCanvas.height = OUTPUT_HEIGHT + PAD + BOTTOM;
+      
+      finalCtx.fillStyle = '#ffffff';
+      finalCtx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      finalCtx.strokeStyle = 'rgba(212,175,55,0.5)';
+      finalCtx.lineWidth = 3;
+      finalCtx.strokeRect(6, 6, finalCanvas.width - 12, finalCanvas.height - 12);
+      finalCtx.drawImage(tempCanvas, PAD, PAD, OUTPUT_WIDTH, OUTPUT_HEIGHT);
+      
+      finalCtx.fillStyle = '#b8860b';
+      finalCtx.font = 'bold 22px "Playfair Display", serif';
+      finalCtx.textAlign = 'center';
+      finalCtx.fillText('Mis XV Años — Valentina', finalCanvas.width/2, OUTPUT_HEIGHT + PAD + 35);
+      finalCtx.font = '16px "Playfair Display", serif';
+      finalCtx.fillText('15 de Junio, 2025', finalCanvas.width/2, OUTPUT_HEIGHT + PAD + 60);
+      
+      currentPhotoDataURL = finalCanvas.toDataURL('image/png');
+      actionDiv.classList.remove('hidden');
+      photoTaken = true;
+      
+      statusMsg.textContent = '¡Foto capturada!';
+      setTimeout(() => {
+        statusMsg.textContent = cameraActive ? 'Cámara activa' : 'Sin cámara · Modo demostración';
+      }, 1500);
+    }
+
+    function savePhoto() {
+      if (!currentPhotoDataURL) return;
+      const link = document.createElement('a');
+      link.download = `photo-xv-${Date.now()}.png`;
+      link.href = currentPhotoDataURL;
+      link.click();
+    }
+
+    function printPhoto() {
+      if (!currentPhotoDataURL) return;
+      const printWindow = window.open('', '_blank');
+      if (!printWindow) {
+        alert('Permite las ventanas emergentes para imprimir.');
+        return;
+      }
+      printWindow.document.write(`
+        <html><head><title>Imprimir Foto XV</title>
+        <style>@page{margin:0.5cm}body{display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#f5f5f5;font-family:'Playfair Display',serif}.frame{background:#fff;padding:16px 16px 60px;box-shadow:0 10px 30px rgba(0,0,0,0.2);text-align:center;max-width:400px}img{width:100%;height:auto}p{margin:8px 0 0;color:#b8860b}</style>
+        </head><body><div class="frame"><img src="${currentPhotoDataURL}"><p><strong>Mis XV Años — Valentina</strong></p><p>15 de Junio, 2025</p></div><script>setTimeout(()=>window.print(),300)<\/script></body></html>
+      `);
+      printWindow.document.close();
+    }
+
+    function resetToCapture() {
+      actionDiv.classList.add('hidden');
+      photoTaken = false;
+      currentPhotoDataURL = '';
+      statusMsg.textContent = cameraActive ? 'Cámara activa' : 'Sin cámara · Modo demostración';
+    }
+
+    // ----- INICIALIZAR -----
+    async function initialize() {
+      const container = liveCanvas.parentElement;
+      const rect = container.getBoundingClientRect();
+      liveCanvas.width = rect.width || 360;
+      liveCanvas.height = liveCanvas.width * (4/3);
+      
+      await initCamera();
+      animate();
+      
+      btnCapture.addEventListener('click', capturePhoto);
+      btnSwitch.addEventListener('click', switchCamera);
+      btnSave.addEventListener('click', savePhoto);
+      btnPrint.addEventListener('click', printPhoto);
+      btnNew.addEventListener('click', resetToCapture);
+      
+      liveCanvas.addEventListener('dblclick', async () => {
+        if (!cameraActive) {
+          statusMsg.textContent = 'Reintentando cámara...';
+          await initCamera();
+        }
+      });
+      
+      window.addEventListener('resize', () => {
+        const container = liveCanvas.parentElement;
+        const rect = container.getBoundingClientRect();
+        liveCanvas.width = rect.width || 360;
+        liveCanvas.height = liveCanvas.width * (4/3);
+        if (!cameraActive) {
+          drawGreenScreen(liveCtx, liveCanvas.width, liveCanvas.height);
+        }
+      });
+    }
+
+    initialize();
+    lucide.createIcons();
+  })();
+</script>
+</body>
+</html>
