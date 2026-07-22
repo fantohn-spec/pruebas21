@@ -1,460 +1,576 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Photo Booth XV · PC Webcam</title>
-  <!-- Tailwind + Fuentes -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
-  <!-- Lucide Icons -->
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-  <style>
-    body {
-      font-family: 'Quicksand', sans-serif;
-      background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 40%, #4a1942 80%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0;
-      padding: 16px;
-    }
-    .polaroid-frame {
-      background: #fff;
-      padding: 16px 16px 60px 16px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 4px 12px rgba(0,0,0,0.2);
-      position: relative;
-      border-radius: 8px;
-    }
-    .polaroid-frame::before {
-      content: '';
-      position: absolute;
-      top: 4px; left: 4px; right: 4px; bottom: 4px;
-      border: 2px solid rgba(212,175,55,0.25);
-      pointer-events: none;
-      border-radius: 6px;
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, #d4af37, #f0d060);
-      color: #1a0a2e;
-      font-weight: 600;
-      transition: all 0.2s;
-    }
-    .btn-primary:hover {
-      transform: scale(1.03);
-      box-shadow: 0 8px 16px rgba(212,175,55,0.3);
-    }
-    .btn-secondary {
-      background: rgba(212,175,55,0.15);
-      border: 1px solid #d4af37;
-      color: #f0d060;
-      font-weight: 500;
-      transition: all 0.2s;
-    }
-    .btn-secondary:hover {
-      background: rgba(212,175,55,0.25);
-    }
-    /* Estilo para pantalla verde */
-    .green-screen {
-      background: #00b140;
-      background-image: radial-gradient(circle at 30% 30%, #00d84a, #008a30);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aventuras por la Baja - Ruleta Oficial</title>
+    <style>
+        :root {
+            --brand-dark: #000814;
+            --brand-navy: #003566;
+            --brand-blue: #0077b6;
+            --brand-cyan: #00b4d8;
+            --brand-gold: #ffc300;
+            --brand-light: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--brand-dark) 0%, var(--brand-navy) 100%);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Banner Publicitario Superior */
+        .top-promo-bar {
+            width: 100%;
+            background-color: var(--brand-gold);
+            color: var(--brand-dark);
+            text-align: center;
+            padding: 8px 10px;
+            font-weight: bold;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        header {
+            text-align: center;
+            margin: 20px 10px 10px;
+        }
+
+        header h1 {
+            color: var(--brand-gold);
+            text-transform: uppercase;
+            font-size: 28px;
+            letter-spacing: 2px;
+            margin: 0 0 5px 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        header p {
+            color: var(--brand-cyan);
+            margin: 0;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .main-container {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            text-align: center;
+            max-width: 440px;
+            width: 90%;
+            margin-bottom: 30px;
+        }
+
+        /* Formulario */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        input {
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid var(--brand-cyan);
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--brand-gold);
+        }
+
+        .btn-action {
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(180deg, var(--brand-gold) 0%, #e6a100 100%);
+            color: var(--brand-dark);
+            font-weight: 800;
+            font-size: 16px;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 195, 0, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 195, 0, 0.6);
+        }
+
+        .btn-action:disabled {
+            background: #666;
+            color: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Ruleta */
+        .wheel-container {
+            position: relative;
+            width: 310px;
+            height: 310px;
+            margin: 15px auto;
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid var(--brand-gold);
+            box-shadow: 0 0 20px rgba(0, 180, 216, 0.5);
+            box-sizing: border-box;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 16px solid transparent;
+            border-right: 16px solid transparent;
+            border-top: 28px solid #ff0055;
+            filter: drop-shadow(0 3px 5px rgba(0,0,0,0.5));
+            z-index: 10;
+        }
+
+        /* Sección Publicitaria (Ads Carousel / Cards) */
+        .ad-section {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .ad-section h3 {
+            font-size: 14px;
+            color: var(--brand-gold);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .ad-card {
+            background: rgba(0, 53, 102, 0.8);
+            border: 1px solid var(--brand-cyan);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ad-card img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: var(--brand-cyan);
+        }
+
+        .ad-card-info h4 {
+            margin: 0;
+            color: var(--brand-light);
+            font-size: 14px;
+        }
+
+        .ad-card-info p {
+            margin: 3px 0 0 0;
+            color: var(--brand-cyan);
+            font-size: 12px;
+        }
+
+        /* Modal Comprobante */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 8, 20, 0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            color: #222;
+            padding: 25px;
+            border-radius: 20px;
+            max-width: 380px;
+            width: 85%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .ticket {
+            border: 2px dashed var(--brand-navy);
+            padding: 15px;
+            margin: 15px 0;
+            background: #f0f8ff;
+            border-radius: 10px;
+        }
+
+        .ticket h3 {
+            color: var(--brand-navy);
+            margin: 0 0 10px 0;
+            font-size: 18px;
+        }
+
+        .ticket p {
+            margin: 6px 0;
+            font-size: 14px;
+        }
+
+        .ticket-ad {
+            background: var(--brand-gold);
+            color: var(--brand-dark);
+            padding: 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .share-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .btn-ws { background: #25D366; color: white; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; font-size: 14px; }
+        .btn-fb { background: #1877F2; color: white; text-decoration: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; font-size: 14px; }
+
+        .fb-page-link {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--brand-blue);
+            text-decoration: underline;
+            font-weight: bold;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="w-full max-w-3xl mx-auto">
-  <!-- TARJETA PRINCIPAL -->
-  <div class="bg-[#1e1030] bg-opacity-40 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-2xl border border-[#d4af37]/20">
-    
-    <!-- Encabezado -->
-    <div class="text-center mb-6">
-      <div class="flex justify-center mb-2">
-        <!-- Tiara decorativa -->
-        <svg width="64" height="36" viewBox="0 0 60 32">
-          <path d="M5 28 L15 8 L22 18 L30 2 L38 18 L45 8 L55 28" fill="none" stroke="#d4af37" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <circle cx="30" cy="4" r="3" fill="#d4af37"/>
-          <circle cx="15" cy="10" r="2" fill="#e8c44a"/>
-          <circle cx="45" cy="10" r="2" fill="#e8c44a"/>
-          <circle cx="22" cy="18" r="1.5" fill="#f0d060"/>
-          <circle cx="38" cy="18" r="1.5" fill="#f0d060"/>
-          <path d="M3 28 L57 28" stroke="#d4af37" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <h1 class="text-3xl md:text-4xl font-bold" style="font-family: 'Playfair Display', serif; color: #f0d060;">Mis XV Años</h1>
-      <p class="text-lg italic" style="color: #e8c44a; font-family: 'Playfair Display', serif;">Valentina</p>
-      <p class="text-sm mt-1 opacity-80" style="color: #e8c44a;">Photo Booth · PC Edition</p>
+    <div class="top-promo-bar">
+        ⛵ ¡Descubre las mejores aventuras en la Península con Aventuras por la Baja! 🐋
     </div>
 
-    <!-- ÁREA DE VISUALIZACIÓN (VIDEO / CANVAS / FALLBACK VERDE) -->
-    <div class="flex justify-center">
-      <div class="polaroid-frame w-full max-w-md">
-        <!-- Contenedor con relación de aspecto 3:4 -->
-        <div class="relative w-full aspect-[3/4] bg-black rounded-md overflow-hidden" id="previewContainer">
-          <!-- Video (oculto inicialmente hasta que se active la cámara) -->
-          <video id="cameraVideo" autoplay playsinline muted 
-                 class="absolute inset-0 w-full h-full object-cover hidden"></video>
-          <!-- Canvas de vista previa (para mostrar video o fallback verde) -->
-          <canvas id="liveCanvas" class="absolute inset-0 w-full h-full object-cover"></canvas>
-          <!-- Mensaje de estado -->
-          <div id="statusMessage" class="absolute bottom-2 left-0 right-0 text-center text-white text-xs bg-black/40 py-1">
-            Iniciando cámara...
-          </div>
+    <header>
+        <h1>Aventuras por la Baja</h1>
+        <p>Gira la ruleta y gana premios exclusivos para tu próximo viaje</p>
+    </header>
+
+    <div class="main-container">
+        <!-- Formulario Registro -->
+        <form id="userForm">
+            <input type="text" id="userName" placeholder="Tu Nombre Completo" required>
+            <input type="tel" id="userPhone" placeholder="Tu Teléfono (WhatsApp)" required>
+            <button type="submit" class="btn-action">Registrarme para Jugar</button>
+        </form>
+
+        <p id="attemptsInfo" style="display:none; color: var(--brand-gold); font-weight: bold; margin-bottom: 10px;"></p>
+
+        <!-- Ruleta -->
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <canvas id="wheel" width="310" height="310"></canvas>
         </div>
-        <!-- Texto inferior del marco -->
-        <div class="text-center mt-2">
-          <p class="text-sm font-medium" style="color: #b8860b; font-family: 'Playfair Display', serif;">15 de Junio, 2025</p>
+
+        <button id="spinBtn" class="btn-action" style="display:none; width: 100%; margin-top: 10px;" onclick="spin()">¡GIRAR RULETA!</button>
+
+        <!-- Banners Publicitarios Oficiales -->
+        <div class="ad-section">
+            <h3>Nuestras Experiencias Destacadas</h3>
+            
+            <div class="ad-card">
+                <div style="font-size:25px;">🐋</div>
+                <div class="ad-card-info">
+                    <h4>Avistamiento de Ballenas</h4>
+                    <p>Vive una experiencia inolvidable en el Mar de Cortés y el Pacífico.</p>
+                </div>
+            </div>
+
+            <div class="ad-card">
+                <div style="font-size:25px;">⛵</div>
+                <div class="ad-card-info">
+                    <h4>Paseos en Barco & Snorkel</h4>
+                    <p>Tours guiados por las mejores islas y playas de la Baja.</p>
+                </div>
+            </div>
+
+            <div class="ad-card">
+                <div style="font-size:25px;">🍷</div>
+                <div class="ad-card-info">
+                    <h4>Ruta del Vino & Gastronomía</h4>
+                    <p>Disfruta degustaciones y paisajes espectaculares.</p>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- BOTONES DE CONTROL -->
-    <div class="flex flex-wrap items-center justify-center gap-3 mt-8">
-      <!-- Botón Capturar -->
-      <button id="btnCapture" class="btn-primary px-8 py-3 rounded-full text-base shadow-lg flex items-center gap-2">
-        <i data-lucide="camera" class="w-5 h-5"></i> Capturar
-      </button>
-      
-      <!-- Botón Cambiar cámara (solo visible si hay múltiples) -->
-      <button id="btnSwitchCam" class="btn-secondary p-3 rounded-full" title="Cambiar cámara">
-        <i data-lucide="refresh-cw" class="w-5 h-5"></i>
-      </button>
+    <!-- Modal Comprobante de Resultado -->
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <h2 id="modalTitle" style="color: var(--brand-navy); margin-top: 0;">Aventuras por la Baja</h2>
+            
+            <div class="ticket">
+                <h3>COMPROBANTE OFICIAL</h3>
+                <p><strong>Folio:</strong> <span id="ticketFolio"></span></p>
+                <p><strong>Cliente:</strong> <span id="ticketName"></span></p>
+                <p><strong>Teléfono:</strong> <span id="ticketPhone"></span></p>
+                <hr style="border: 0.5px solid #ccc;">
+                <p><strong>Premio obtenido:</strong></p>
+                <h2 id="ticketResult" style="color: var(--brand-blue); margin: 5px 0;"></h2>
+                
+                <div class="ticket-ad">
+                    📌 Presenta este folio al reservar tu tour en Aventuras por la Baja.
+                </div>
+            </div>
+            
+            <p style="font-size: 13px; margin-bottom: 10px;">¡Comparte tu folio en redes sociales para hacerlo válido!</p>
+            
+            <div class="share-btns">
+                <a id="wsShare" href="#" target="_blank" class="btn-ws">WhatsApp</a>
+                <a id="fbShare" href="#" target="_blank" class="btn-fb">Facebook</a>
+            </div>
+
+            <a href="https://www.facebook.com/aventuras.porlabaja" target="_blank" class="fb-page-link">
+                Visita nuestra página de Facebook
+            </a>
+            
+            <br><br>
+            <button class="btn-action" style="padding: 8px 16px; font-size: 14px;" onclick="closeModal()">Cerrar / Jugar de nuevo</button>
+        </div>
     </div>
 
-    <!-- BOTONES DE ACCIÓN (Guardar / Imprimir) - aparecen tras captura -->
-    <div id="actionButtons" class="hidden flex-wrap items-center justify-center gap-3 mt-6">
-      <button id="btnSave" class="btn-primary px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
-        <i data-lucide="download" class="w-4 h-4"></i> Guardar Foto
-      </button>
-      <button id="btnPrint" class="btn-secondary px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
-        <i data-lucide="printer" class="w-4 h-4"></i> Imprimir
-      </button>
-      <button id="btnNewPhoto" class="btn-secondary px-6 py-2.5 rounded-full text-sm flex items-center gap-2">
-        <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Nueva Foto
-      </button>
-    </div>
+    <script>
+        // Configuración de Premios (80% Sigue Participando, 1% Viaje Gratis, 19% repartido con mayor peso en 10% desc y vino)
+        const prizes = [
+            { label: "Sigue Participando", weight: 80, color: "#003566" },
+            { label: "10% Descuento", weight: 7, color: "#0077b6" },
+            { label: "Botella de Vino", weight: 6, color: "#00b4d8" },
+            { label: "Barquito Gratis", weight: 3, color: "#ffc300" },
+            { label: "20% Descuento", weight: 3, color: "#023e8a" },
+            { label: "Viaje Gratis", weight: 1, color: "#ff0055" }
+        ];
 
-    <!-- Mensaje de pie -->
-    <p class="text-center text-xs mt-6 opacity-70" style="color: #e8c44a;">¡Gracias por compartir este día!</p>
-  </div>
-</div>
+        const canvas = document.getElementById('wheel');
+        const ctx = canvas.getContext('2d');
+        const numSlices = prizes.length;
+        const sliceAngle = (2 * Math.PI) / numSlices;
+        let currentAngle = 0;
+        let isSpinning = false;
+        let userData = { name: "", phone: "", attempts: 0 };
 
-<!-- Canvas oculto para procesar la foto final con marco -->
-<canvas id="finalCanvas" style="display:none;"></canvas>
-
-<script>
-  (function(){
-    "use strict";
-
-    // ----- ELEMENTOS DEL DOM -----
-    const video = document.getElementById('cameraVideo');
-    const liveCanvas = document.getElementById('liveCanvas');
-    const liveCtx = liveCanvas.getContext('2d');
-    const statusMsg = document.getElementById('statusMessage');
-    const btnCapture = document.getElementById('btnCapture');
-    const btnSwitch = document.getElementById('btnSwitchCam');
-    const actionDiv = document.getElementById('actionButtons');
-    const btnSave = document.getElementById('btnSave');
-    const btnPrint = document.getElementById('btnPrint');
-    const btnNew = document.getElementById('btnNewPhoto');
-    const finalCanvas = document.getElementById('finalCanvas');
-    const finalCtx = finalCanvas.getContext('2d');
-
-    // ----- ESTADO -----
-    let stream = null;
-    let cameraActive = false;
-    let facingMode = 'user';
-    let photoTaken = false;
-    let currentPhotoDataURL = '';
-
-    const OUTPUT_WIDTH = 720;
-    const OUTPUT_HEIGHT = 960;
-
-    // ----- FUNCIONES DE DIBUJO -----
-    function drawGreenScreen(ctx, width, height) {
-      const grad = ctx.createLinearGradient(0, 0, width, height);
-      grad.addColorStop(0, '#00b140');
-      grad.addColorStop(1, '#006b28');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, width, height);
-      
-      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-      ctx.lineWidth = 2;
-      const step = 40;
-      for (let i = 0; i < width; i += step) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, height);
-        ctx.stroke();
-      }
-      for (let i = 0; i < height; i += step) {
-        ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(width, i);
-        ctx.stroke();
-      }
-      
-      ctx.font = 'bold 24px "Quicksand", sans-serif';
-      ctx.fillStyle = 'white';
-      ctx.shadowColor = 'black';
-      ctx.shadowBlur = 10;
-      ctx.textAlign = 'center';
-      ctx.fillText('📷 SIN CÁMARA', width/2, height/2 - 20);
-      ctx.font = '16px "Quicksand", sans-serif';
-      ctx.fillText('Pantalla verde · Photo Booth', width/2, height/2 + 20);
-      ctx.shadowBlur = 0;
-    }
-
-    function drawVideoToLiveCanvas() {
-      if (!cameraActive || !stream || video.readyState < 2) {
-        drawGreenScreen(liveCtx, liveCanvas.width, liveCanvas.height);
-        return;
-      }
-      
-      const vw = video.videoWidth;
-      const vh = video.videoHeight;
-      if (vw === 0 || vh === 0) return;
-      
-      let sx, sy, sw, sh;
-      const targetAspect = 3/4;
-      const videoAspect = vw / vh;
-      
-      if (videoAspect > targetAspect) {
-        sw = vh * targetAspect;
-        sh = vh;
-        sx = (vw - sw) / 2;
-        sy = 0;
-      } else {
-        sw = vw;
-        sh = vw / targetAspect;
-        sx = 0;
-        sy = (vh - sh) / 2;
-      }
-      
-      liveCtx.drawImage(video, sx, sy, sw, sh, 0, 0, liveCanvas.width, liveCanvas.height);
-    }
-
-    function animate() {
-      if (cameraActive) {
-        drawVideoToLiveCanvas();
-      } else {
-        drawGreenScreen(liveCtx, liveCanvas.width, liveCanvas.height);
-      }
-      requestAnimationFrame(animate);
-    }
-
-    // ----- INICIALIZAR CÁMARA (CORREGIDO) -----
-    async function initCamera() {
-      try {
-        // Detener stream previo
-        if (stream) {
-          stream.getTracks().forEach(t => t.stop());
-          stream = null;
+        // Audio sintetizado (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeep() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 650;
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.04);
         }
-        
-        statusMsg.textContent = 'Solicitando acceso a la cámara...';
-        console.log('🔵 Solicitando cámara con facingMode:', facingMode);
-        
-        const constraints = {
-          video: {
-            facingMode: facingMode,
-            width: { ideal: 1280 },
-            height: { ideal: 960 }
-          },
-          audio: false
-        };
-        
-        stream = await navigator.mediaDevices.getUserMedia(constraints);
-        console.log('✅ Stream obtenido:', stream);
-        
-        // Asignar stream al video
-        video.srcObject = stream;
-        video.classList.remove('hidden'); // Asegurar visibilidad
-        
-        // Forzar reproducción
-        await video.play().catch(e => console.warn('⚠️ video.play() rechazado:', e));
-        
-        // Esperar a que el video tenga datos
-        await new Promise((resolve) => {
-          if (video.readyState >= 2) {
-            resolve();
-          } else {
-            video.onloadeddata = () => {
-              console.log('📹 Video cargado, dimensiones:', video.videoWidth, 'x', video.videoHeight);
-              resolve();
+
+        // Renderizado de Ruleta
+        function drawWheel() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const center = canvas.width / 2;
+            const radius = center - 8;
+
+            for (let i = 0; i < numSlices; i++) {
+                const angle = currentAngle + i * sliceAngle;
+                
+                // Sector
+                ctx.beginPath();
+                ctx.fillStyle = prizes[i].color;
+                ctx.moveTo(center, center);
+                ctx.arc(center, center, radius, angle, angle + sliceAngle);
+                ctx.lineTo(center, center);
+                ctx.fill();
+                ctx.lineWidth = 1.5;
+                ctx.strokeStyle = "#ffffff";
+                ctx.stroke();
+
+                // Texto
+                ctx.save();
+                ctx.translate(center, center);
+                ctx.rotate(angle + sliceAngle / 2);
+                ctx.textAlign = "right";
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 11px Arial";
+                ctx.fillText(prizes[i].label, radius - 12, 4);
+                ctx.restore();
+            }
+
+            // Centro con Logo / Nombre Marca
+            ctx.beginPath();
+            ctx.arc(center, center, 36, 0, 2 * Math.PI);
+            ctx.fillStyle = "#000814";
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "#ffc300";
+            ctx.stroke();
+
+            ctx.fillStyle = "#ffc300";
+            ctx.font = "bold 7.5px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("AVENTURAS", center, center - 4);
+            ctx.fillText("POR LA BAJA", center, center + 6);
+        }
+
+        drawWheel();
+
+        // Control de Registro y Límite de 4 Intentos por Nombre + Teléfono
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('userName').value.trim().toLowerCase();
+            const phone = document.getElementById('userPhone').value.trim();
+            const userKey = `ab_user_${name}_${phone}`;
+
+            let attempts = parseInt(localStorage.getItem(userKey) || "0");
+
+            if (attempts >= 4) {
+                alert("Has alcanzado el límite máximo de 4 intentos para estos datos.");
+                return;
+            }
+
+            userData = { 
+                name: document.getElementById('userName').value, 
+                phone: phone, 
+                attempts: attempts, 
+                key: userKey 
             };
-          }
+            
+            document.getElementById('userForm').style.display = 'none';
+            document.getElementById('spinBtn').style.display = 'block';
+            updateAttemptsUI();
         });
-        
-        // Activar bandera de cámara
-        cameraActive = true;
-        statusMsg.textContent = 'Cámara activa';
-        btnSwitch.style.display = 'inline-flex';
-        console.log('🎥 Cámara activa. cameraActive =', cameraActive);
-        
-        // Ajustar canvas
-        const container = liveCanvas.parentElement;
-        const rect = container.getBoundingClientRect();
-        liveCanvas.width = rect.width || 360;
-        liveCanvas.height = liveCanvas.width * (4/3);
-        
-      } catch (error) {
-        console.error('❌ Error al acceder a la cámara:', error);
-        cameraActive = false;
-        video.classList.add('hidden');
-        statusMsg.textContent = 'Sin cámara · Modo demostración (pantalla verde)';
-        btnSwitch.style.display = 'none';
-        
-        const container = liveCanvas.parentElement;
-        const rect = container.getBoundingClientRect();
-        liveCanvas.width = rect.width || 360;
-        liveCanvas.height = liveCanvas.width * (4/3);
-        drawGreenScreen(liveCtx, liveCanvas.width, liveCanvas.height);
-      }
-    }
 
-    // ----- CAMBIAR CÁMARA -----
-    async function switchCamera() {
-      if (!cameraActive) return;
-      facingMode = (facingMode === 'user') ? 'environment' : 'user';
-      await initCamera();
-    }
-
-    // ----- CAPTURAR FOTO -----
-    function capturePhoto() {
-      const tempCanvas = document.createElement('canvas');
-      tempCanvas.width = OUTPUT_WIDTH;
-      tempCanvas.height = OUTPUT_HEIGHT;
-      const tempCtx = tempCanvas.getContext('2d');
-      
-      if (cameraActive && video.readyState >= 2) {
-        const vw = video.videoWidth;
-        const vh = video.videoHeight;
-        let sx, sy, sw, sh;
-        const targetAspect = 3/4;
-        const videoAspect = vw / vh;
-        
-        if (videoAspect > targetAspect) {
-          sw = vh * targetAspect;
-          sh = vh;
-          sx = (vw - sw) / 2;
-          sy = 0;
-        } else {
-          sw = vw;
-          sh = vw / targetAspect;
-          sx = 0;
-          sy = (vh - sh) / 2;
+        function updateAttemptsUI() {
+            const info = document.getElementById('attemptsInfo');
+            info.style.display = 'block';
+            info.innerHTML = `Hola <strong>${userData.name}</strong> | Intentos restantes: <strong>${4 - userData.attempts}</strong>`;
         }
-        
-        if (facingMode === 'user') {
-          tempCtx.save();
-          tempCtx.translate(OUTPUT_WIDTH, 0);
-          tempCtx.scale(-1, 1);
+
+        // Selección Probabilística
+        function getWeightedPrizeIndex() {
+            const rand = Math.random() * 100;
+            let cumulative = 0;
+            for (let i = 0; i < prizes.length; i++) {
+                cumulative += prizes[i].weight;
+                if (rand < cumulative) return i;
+            }
+            return 0;
         }
-        tempCtx.drawImage(video, sx, sy, sw, sh, 0, 0, OUTPUT_WIDTH, OUTPUT_HEIGHT);
-        if (facingMode === 'user') tempCtx.restore();
-      } else {
-        drawGreenScreen(tempCtx, OUTPUT_WIDTH, OUTPUT_HEIGHT);
-      }
-      
-      // Marco final
-      const PAD = 24;
-      const BOTTOM = 100;
-      finalCanvas.width = OUTPUT_WIDTH + PAD * 2;
-      finalCanvas.height = OUTPUT_HEIGHT + PAD + BOTTOM;
-      
-      finalCtx.fillStyle = '#ffffff';
-      finalCtx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-      finalCtx.strokeStyle = 'rgba(212,175,55,0.5)';
-      finalCtx.lineWidth = 3;
-      finalCtx.strokeRect(6, 6, finalCanvas.width - 12, finalCanvas.height - 12);
-      finalCtx.drawImage(tempCanvas, PAD, PAD, OUTPUT_WIDTH, OUTPUT_HEIGHT);
-      
-      finalCtx.fillStyle = '#b8860b';
-      finalCtx.font = 'bold 22px "Playfair Display", serif';
-      finalCtx.textAlign = 'center';
-      finalCtx.fillText('Mis XV Años — Valentina', finalCanvas.width/2, OUTPUT_HEIGHT + PAD + 35);
-      finalCtx.font = '16px "Playfair Display", serif';
-      finalCtx.fillText('15 de Junio, 2025', finalCanvas.width/2, OUTPUT_HEIGHT + PAD + 60);
-      
-      currentPhotoDataURL = finalCanvas.toDataURL('image/png');
-      actionDiv.classList.remove('hidden');
-      photoTaken = true;
-      
-      statusMsg.textContent = '¡Foto capturada!';
-      setTimeout(() => {
-        statusMsg.textContent = cameraActive ? 'Cámara activa' : 'Sin cámara · Modo demostración';
-      }, 1500);
-    }
 
-    function savePhoto() {
-      if (!currentPhotoDataURL) return;
-      const link = document.createElement('a');
-      link.download = `photo-xv-${Date.now()}.png`;
-      link.href = currentPhotoDataURL;
-      link.click();
-    }
+        // Animación de Giro
+        function spin() {
+            if (isSpinning) return;
+            if (userData.attempts >= 4) {
+                alert("Ya agostaste tus 4 intentos permitidos.");
+                return;
+            }
 
-    function printPhoto() {
-      if (!currentPhotoDataURL) return;
-      const printWindow = window.open('', '_blank');
-      if (!printWindow) {
-        alert('Permite las ventanas emergentes para imprimir.');
-        return;
-      }
-      printWindow.document.write(`
-        <html><head><title>Imprimir Foto XV</title>
-        <style>@page{margin:0.5cm}body{display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;background:#f5f5f5;font-family:'Playfair Display',serif}.frame{background:#fff;padding:16px 16px 60px;box-shadow:0 10px 30px rgba(0,0,0,0.2);text-align:center;max-width:400px}img{width:100%;height:auto}p{margin:8px 0 0;color:#b8860b}</style>
-        </head><body><div class="frame"><img src="${currentPhotoDataURL}"><p><strong>Mis XV Años — Valentina</strong></p><p>15 de Junio, 2025</p></div><script>setTimeout(()=>window.print(),300)<\/script></body></html>
-      `);
-      printWindow.document.close();
-    }
+            isSpinning = true;
+            document.getElementById('spinBtn').disabled = true;
 
-    function resetToCapture() {
-      actionDiv.classList.add('hidden');
-      photoTaken = false;
-      currentPhotoDataURL = '';
-      statusMsg.textContent = cameraActive ? 'Cámara activa' : 'Sin cámara · Modo demostración';
-    }
+            // Registrar intento
+            userData.attempts++;
+            localStorage.setItem(userData.key, userData.attempts);
+            updateAttemptsUI();
 
-    // ----- INICIALIZAR -----
-    async function initialize() {
-      const container = liveCanvas.parentElement;
-      const rect = container.getBoundingClientRect();
-      liveCanvas.width = rect.width || 360;
-      liveCanvas.height = liveCanvas.width * (4/3);
-      
-      await initCamera();
-      animate();
-      
-      btnCapture.addEventListener('click', capturePhoto);
-      btnSwitch.addEventListener('click', switchCamera);
-      btnSave.addEventListener('click', savePhoto);
-      btnPrint.addEventListener('click', printPhoto);
-      btnNew.addEventListener('click', resetToCapture);
-      
-      liveCanvas.addEventListener('dblclick', async () => {
-        if (!cameraActive) {
-          statusMsg.textContent = 'Reintentando cámara...';
-          await initCamera();
+            const prizeIndex = getWeightedPrizeIndex();
+            
+            // Ángulo objetivo (apuntando al sector correcto arriba en 270 deg)
+            const targetSliceAngle = (3 * Math.PI / 2) - (prizeIndex * sliceAngle) - (sliceAngle / 2);
+            const extraRotations = 5 * 2 * Math.PI; 
+            const totalRotation = extraRotations + (targetSliceAngle - (currentAngle % (2 * Math.PI)));
+
+            let start = null;
+            const duration = 4200; 
+            let lastSoundAngle = currentAngle;
+            const startAngle = currentAngle;
+
+            function animate(timestamp) {
+                if (!start) start = timestamp;
+                const progress = (timestamp - start) / duration;
+
+                if (progress < 1) {
+                    const easeOut = 1 - Math.pow(1 - progress, 3);
+                    currentAngle = startAngle + (totalRotation * easeOut);
+                    
+                    if (Math.abs(currentAngle - lastSoundAngle) >= sliceAngle) {
+                        playBeep();
+                        lastSoundAngle = currentAngle;
+                    }
+
+                    drawWheel();
+                    requestAnimationFrame(animate);
+                } else {
+                    isSpinning = false;
+                    document.getElementById('spinBtn').disabled = false;
+                    showResult(prizes[prizeIndex].label);
+                }
+            }
+
+            requestAnimationFrame(animate);
         }
-      });
-      
-      window.addEventListener('resize', () => {
-        const container = liveCanvas.parentElement;
-        const rect = container.getBoundingClientRect();
-        liveCanvas.width = rect.width || 360;
-        liveCanvas.height = liveCanvas.width * (4/3);
-        if (!cameraActive) {
-          drawGreenScreen(liveCtx, liveCanvas.width, liveCanvas.height);
-        }
-      });
-    }
 
-    initialize();
-    lucide.createIcons();
-  })();
-</script>
+        // Modal Comprobante y Enlaces Redes Sociales
+        function showResult(prizeLabel) {
+            const folio = "AB-" + Math.floor(100000 + Math.random() * 900000);
+            const isWin = prizeLabel !== "Sigue Participando";
+
+            document.getElementById('modalTitle').innerText = isWin ? "¡FELICIDADES! 🎉" : "¡SUERTE PARA LA PRÓXIMA!";
+            document.getElementById('ticketFolio').innerText = folio;
+            document.getElementById('ticketName').innerText = userData.name;
+            document.getElementById('ticketPhone').innerText = userData.phone;
+            document.getElementById('ticketResult').innerText = prizeLabel;
+
+            // Enlaces compartir
+            const fbPageUrl = "https://www.facebook.com/aventuras.porlabaja";
+            const shareText = encodeURIComponent(`¡Obtuve "${prizeLabel}" en la Ruleta de Aventuras por la Baja! 🏜️⛵ Mi Folio de juego es: ${folio}. ¡Visita su página y reserva tu aventura! ${fbPageUrl}`);
+            
+            document.getElementById('wsShare').href = `https://api.whatsapp.com/send?text=${shareText}`;
+            document.getElementById('fbShare').href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fbPageUrl)}&quote=${shareText}`;
+
+            document.getElementById('resultModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').style.display = 'none';
+            if (userData.attempts >= 4) {
+                document.getElementById('spinBtn').disabled = true;
+                document.getElementById('spinBtn').innerText = "SIN INTENTOS RESTANTES";
+            }
+        }
+    </script>
 </body>
 </html>
